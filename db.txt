@@ -1,0 +1,56 @@
+Session: PROIECT_TW
+database: bug_tracker
+creare tabele:
+USE bug_tracker;
+CREATE DATABASE bug_tracker;
+
+CREATE TABLE student (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    numePrenume VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL
+);
+
+ALTER TABLE student ADD COLUMN echipa_proiect VARCHAR(255) NULL;
+
+CREATE TABLE proiect (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    repository_proiect VARCHAR(255) NOT NULL,
+    nume_echipa VARCHAR(255) NOT NULL
+);
+
+
+CREATE TABLE tester_proiect (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_email VARCHAR(100) NOT NULL,
+    proiect_id INT NOT NULL,
+    FOREIGN KEY (student_email) REFERENCES student(email) ON DELETE CASCADE,
+    FOREIGN KEY (proiect_id) REFERENCES proiect(id) ON DELETE CASCADE,
+    UNIQUE (student_email, proiect_id)
+);
+
+CREATE TABLE bug (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    proiect_id INT NOT NULL,
+    student_email VARCHAR(100) NOT NULL,
+    severitate VARCHAR(50) NOT NULL,
+    prioritate VARCHAR(50) NOT NULL,
+    descriere TEXT NOT NULL,
+    link_commit VARCHAR(255) NOT NULL,
+    FOREIGN KEY (proiect_id) REFERENCES proiect(id) ON DELETE CASCADE,
+    FOREIGN KEY (student_email) REFERENCES student(email) ON DELETE CASCADE
+);
+ALTER TABLE bug MODIFY descriere VARCHAR(500) NOT NULL;
+
+CREATE TABLE rezolvare (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    bug_id INT NOT NULL,
+    student_id INT NOT NULL,
+    FOREIGN KEY (bug_id) REFERENCES bug(id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE CASCADE
+);
+
+SELECT * FROM tester_proiect;
+SELECT * FROM proiect;
+SELECT * FROM student;
+SELECT * FROM bug;
+SELECT * FROM rezolvare;
